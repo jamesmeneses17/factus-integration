@@ -16,7 +16,10 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from api.views import obtener_rangos
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+     path('obtener-rangos/', obtener_rangos, name='obtener_rangos'),
+    
 ]
