@@ -16,10 +16,13 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import obtener_rangos
+from api.views import (obtener_rangos_numeracion, obtener_municipios, obtener_tributos, obtener_unidades_medida)    
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-     path('obtener-rangos/', obtener_rangos, name='obtener_rangos'),
+    path('api/rangos/', obtener_rangos_numeracion, name='obtener_rangos'),
+    path('api/municipios/', obtener_municipios, name='obtener_municipios'),
+    path('api/tributos/', obtener_tributos, name='obtener_tributos'),
+    path('api/unidades-medida/', obtener_unidades_medida, name='obtener_unidades_medida'),
     
 ]
