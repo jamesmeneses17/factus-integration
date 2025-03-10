@@ -1,5 +1,8 @@
 from django.http import JsonResponse
 from .services import obtener_datos_factus
+from django.views.decorators.csrf import csrf_exempt
+import json
+from .services import enviar_factura
 
 #Urls de prueba para obtener datos de Factus
 
@@ -23,3 +26,15 @@ def obtener_tributos(request):
 def obtener_unidades_medida(request):
     data = obtener_datos_factus(URL_UNIDADES)
     return JsonResponse(data)
+
+@csrf_exempt
+def crear_factura(request):
+    if request.method == "POST":
+        try:
+            data_factura = json.loads(request.body) #Convierte Json a diccionario
+            resultado = enviar_factura(data_factura)
+            return JsonResponse(resultado)
+        except json.JSONDecodeError:
+          return JsonResponse({"error": "⚠️ Error: Formato JSON inválido"}, status=400)
+    else:
+           return JsonResponse({"error": "⚠️ Método no permitido"}, status=405)

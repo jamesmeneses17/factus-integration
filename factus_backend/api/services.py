@@ -1,7 +1,5 @@
 import requests
-
-ACCESS_TOKEN = "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZTUwNDRjYi1mNWI1LTQ5YjEtYWE3My1kZmY4OWJiOGFkZmQiLCJqdGkiOiI1ZDQ0ZDM4MTEyMTkwNDNlNzIyNGNmNGE0MDg0MTU0NzkzNTg1OGZhYWFiN2MyYTE4Mzg0MDY3YzZlZDQyOTYyNmQ3MGQxMzY4YzdkNjk0OSIsImlhdCI6MTc0MTU2NTAxOS4zNjI1OTUsIm5iZiI6MTc0MTU2NTAxOS4zNjI1OTcsImV4cCI6MTc0MTU2ODYxOS4zNTE2NTIsInN1YiI6IjMiLCJzY29wZXMiOltdfQ.X-ALn1hdc1vvbTEM-Gm1pjDQl3WmYyZN2hYe79BqQeVrajlrTw-wjoPB7TgziUhlJnrWQBq-1vv2AXbBJnu-gxErCf_uzhYO_ZkG555bnf1fxY_RAs5NtnXeUa6Tc1vCMNhQRGSn9Cfh5IFAUbNPFcCil48KZXm_Y8LBhmvsbbWwP03R15gFDpJvGRxM44SeMiMO7XrcoZ61m0sgftWV5e_sdLrxxa4dIrCtx3cN9FV6I4Af9cPhfYvXRUpOG7ifL574u2G5fUqqIZ7PyoI43GjVljageOx70OMVVT_pdE6mCKEtR0HoGUGp2oB6idqTnBJFQ_FG41YJrKkCXrqvPr1ovmxfrfWCHmfYIYoOZ53cm752MUFS8DZYBtJR6F9jl3RAczoH25WAVU87P61a1AwTUcW0b5kBK3YhMZajE7VncaW_pB70VuHHYNDwlnP-Vra49SWD6aSbkN99K8uYsec474EwtJg_b8iY5-Y77MGuHjJMOlPfHLcKi-2CITFdTIWceewszWcSTcW6t-VkovLNdDfurOqFeFFI4_YxY0xjP56Mkn4uDEUvJ2lLGIFw0StEH5w03CfOsvn0YbM1s2NSnkAKP7sGaOLjq2vnXuxNen542nqPFmP1-KsSZ6SIYgCF9aQ8CD6ky-BuulN8jTdbEWQ_0Yj97bwRR3on24c" # Aquí usas tu token real
-
+ACCESS_TOKEN="eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiJ9.eyJhdWQiOiI5ZTUwNDRjYi1mNWI1LTQ5YjEtYWE3My1kZmY4OWJiOGFkZmQiLCJqdGkiOiJkOTI2NDZkMDg3NzM3YTMzNzRhYzI2OWU1MDNjZjU0NWIwNDY3NTA0YzAyMDNiMDQ1ZDYzYjYwNTEwMGJlYzM0YmRkMzNkZjhiNTljZWFkMCIsImlhdCI6MTc0MTU3OTI5OS43NjkzMTIsIm5iZiI6MTc0MTU3OTI5OS43NjkzMTQsImV4cCI6MTc0MTU4Mjg5OS43NTkwNTcsInN1YiI6IjMiLCJzY29wZXMiOltdfQ.eF54xWEaft2FtaosdtJmJ-oathQP4A9cdC8LTeOWXwb_XlTYn38A05uEcPCDEKeELpLEzgyVm40XwCXUFwPEUUhrjqB3QqXm1uX6RM_4_ZMVO1sShe8Oc9FeHXYOFQvpfLtqr6GINba4HKq5xa2qSvjZE6zJKJHzNG6peTxUhDbY-Y4EQsQW5JU4WtStU7RbCM3vyhJkI3iypqWZBIZS9LCXnqAy07yqNm-FakzG4C9Wv-L2oaqJrL55Dg1_dTETOMi4nBAtJP-CtysAV1evJj2NBZ3LLG58tvTsiv9ie4Z1aZWz4sQHfMefOMFfPMcfnrtPGwtQD1bRGGLNKcjbgzYFc1Wbj_K0VM3LBwIStzxwq3Hk_W06PEqBL3qsOElfnQ350KEnT4vKUzMsRfftYyU9gjDRJZYJ2xe_KQ5gwNTkVl6LBVzd4CwEGkbTPWMKrKkN19dNwadOqTPmQ5TD0sZjClhu91Naq5eCdpjBstzo_Df-sOGHLF8OmdU_3dt6_-DJPZ0mnWtNI506Z_JNIJxcSvhM6DV1S-VcT3Zo2A6hX0B3kQrW33pOfebxiQSxFY26MoybGMYRETKVR7ojjISAg8g6I4RWWIvIrcjSnIdgQxkHBwek3tPvlbc80KERZlIg_ervV_5lGBHcSn8ID0KxAkdsWJy5rg873q3cxU0"
 
 headers = {
     "Authorization":f"Bearer {ACCESS_TOKEN}",
@@ -23,4 +21,21 @@ def obtener_datos_factus(url):
     except requests.exceptions.RequestException as e:
             return {"error":f"Error {e}"}
         
-      
+def enviar_factura(data_factura):
+    #Funcion para enviar factura a factus
+     url = "https://api-sandbox.factus.com.co/v1/bills/validate"  # Url de prueba para enviar factura
+     
+     try :
+         response = requests.post(url,json=data_factura, headers=headers)
+         print(f"Codigo de respuesta : {response.status_code}")
+         print(f"Respuesta de Factus : {response.text}")
+         
+         if response.status_code in [200,201]:
+             return response.json()  #Devuelve la respuesta en formato JSON con el resultado
+         else:
+             return {"error":f"Error {response.status_code}: {response.text}"}
+         
+    
+     except requests.exceptions.RequestException as e:
+           return {"error": f"⚠️ Error de conexión: {str(e)}"}
+        
