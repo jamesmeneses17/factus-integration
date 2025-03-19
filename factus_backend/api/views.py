@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .services import obtener_datos_factus, obtener_facturas
+from .services import obtener_datos_factus, obtener_facturas,obtener_factura_por_numero
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .services import enviar_factura
@@ -58,3 +58,10 @@ def crear_factura(request):
           return JsonResponse({"error": "⚠️ Error: Formato JSON inválido"}, status=400)
     else:
            return JsonResponse({"error": "⚠️ Método no permitido"}, status=405)
+    
+
+def ver_factura(request, numero_factura):
+    #vista para ver una factura por numero
+    
+    data = obtener_factura_por_numero(numero_factura)
+    return JsonResponse(data)

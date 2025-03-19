@@ -59,3 +59,21 @@ def obtener_facturas(filtros):
         
     except requests.exceptions.RequestException as e:
         return {"error": f"Error {e}"}
+
+def obtener_factura_por_numero(numero_factura):
+    #obetener factura por numero
+    url = f"https://api-sandbox.factus.com.co/v1/bills/show/{numero_factura}"
+    try :
+        response = requests.get(url,headers=headers)
+        print(f"Código de respuesta ({url}): {response.status_code}")
+        print(f"Respuesta de Factus ({url}): {response.text}")
+        
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {"error":f"Error {response.status_code}: {response.text}"}
+    except requests.exceptions.RequestException as e:
+        return {"error":f"Error {e}"}
+
+        
+        
