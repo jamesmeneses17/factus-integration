@@ -92,6 +92,21 @@ def descargar_pdf_factura(numero_factura):
         return {"error":f"Error {e}"}
 
         
+def eliminar_factura(reference_code):
+    
+    # eliminar factura por referencia
+    
+    url = f"https://api-sandbox.factus.com.co/v1/bills/destroy/reference/{reference_code}"
+    try:
+        response = requests.delete(url, headers=headers)
+        print(f"Código de respuesta ({url}): {response.status_code}")
+        print(f"Respuesta de Factus ({url}): {response.text}")
         
+        if response.status_code == 200:
+            return response.json()  # Devuelve la respuesta en formato JSON
+        else:
+            return {"error": f"Error {response.status_code}: {response.text}"}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Error de conexión: {str(e)}"}
         
         
