@@ -109,4 +109,19 @@ def eliminar_factura(reference_code):
     except requests.exceptions.RequestException as e:
         return {"error": f"Error de conexión: {str(e)}"}
         
+
+def obtener_eventos_factura(numero_factura):
+    #obtener eventos de una factura
+    
+    url = f"https://api-sandbox.factus.com.co/v1/bills/{numero_factura}/radian/events"
+    try:
+        response = requests.get(url, headers=headers)
+        print(f"Código de respuesta ({url}): {response.status_code}")
+        print(f"Respuesta de Factus ({url}): {response.text}")
         
+        if response.status_code == 200:
+            return response.json()
+        else:
+            return {"error": f"Error {response.status_code}: {response.text}"}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Error {e}"}

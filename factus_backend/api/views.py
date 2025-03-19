@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .services import obtener_datos_factus, obtener_facturas,obtener_factura_por_numero,descargar_pdf_factura,eliminar_factura
+from .services import obtener_datos_factus, obtener_facturas,obtener_factura_por_numero,descargar_pdf_factura,eliminar_factura,obtener_eventos_factura
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .services import enviar_factura
@@ -77,4 +77,11 @@ def eliminar_factura_view(request, reference_code):
     #vista para eliminar una factura
     
     data = eliminar_factura(reference_code)
+    return JsonResponse(data, safe=False)
+
+def eventos_factura(request, numero_factura):
+    
+    #vista para obtener los eventos de una factura
+    
+    data = obtener_eventos_factura(numero_factura)
     return JsonResponse(data, safe=False)

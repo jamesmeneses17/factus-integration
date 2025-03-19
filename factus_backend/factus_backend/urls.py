@@ -16,7 +16,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from api.views import (obtener_rangos, obtener_municipios, obtener_tributos, obtener_unidades_medida,crear_factura,FacturaListView,ver_factura,descargar_pdf,eliminar_factura_view)
+from api.views import (obtener_rangos, obtener_municipios, obtener_tributos, obtener_unidades_medida,crear_factura,FacturaListView,ver_factura,descargar_pdf,eliminar_factura_view
+                       , eventos_factura)
     
 
 urlpatterns = [
@@ -30,4 +31,5 @@ urlpatterns = [
     path('api/factura/<str:numero_factura>/', ver_factura, name='ver_factura'),
     path('api/factura/pdf/<str:numero_factura>/', descargar_pdf, name='descargar_pdf_factura'),
     path('api/factura/eliminar/<str:reference_code>/', eliminar_factura_view, name='eliminar_factura'),
+    path('api/factura/eventos/<str:numero_factura>/', eventos_factura, name='eventos_factura'),
 ]
