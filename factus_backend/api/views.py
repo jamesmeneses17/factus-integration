@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .services import obtener_datos_factus, obtener_facturas,obtener_factura_por_numero
+from .services import obtener_datos_factus, obtener_facturas,obtener_factura_por_numero,descargar_pdf_factura
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .services import enviar_factura
@@ -64,4 +64,11 @@ def ver_factura(request, numero_factura):
     #vista para ver una factura por numero
     
     data = obtener_factura_por_numero(numero_factura)
+    return JsonResponse(data)
+
+
+def descargar_pdf(request, numero_factura):
+    #vista para descargar el pdf
+    
+    data =descargar_pdf_factura(numero_factura)
     return JsonResponse(data)
