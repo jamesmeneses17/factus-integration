@@ -125,3 +125,18 @@ def obtener_eventos_factura(numero_factura):
             return {"error": f"Error {response.status_code}: {response.text}"}
     except requests.exceptions.RequestException as e:
         return {"error": f"Error {e}"}
+
+
+def enviar_evento_aceptacion_tacita(numero_factura, event_type, datos_evento):
+    url = f"https://api-sandbox.factus.com.co/v1/bills/radian/events/update/{numero_factura}/{event_type}"
+    try:
+        response = requests.post(url, json=datos_evento, headers=headers)
+        print(f"Código de respuesta ({url}): {response.status_code}")
+        print(f"Respuesta de Factus ({url}): {response.text}")
+        
+        if response.status_code in [200, 201]:
+            return response.json()
+        else:
+            return {"error": f"Error {response.status_code}: {response.text}"}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Error de conexión: {str(e)}"}

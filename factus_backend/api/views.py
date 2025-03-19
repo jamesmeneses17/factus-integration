@@ -1,5 +1,5 @@
 from django.http import JsonResponse
-from .services import obtener_datos_factus, obtener_facturas,obtener_factura_por_numero,descargar_pdf_factura,eliminar_factura,obtener_eventos_factura
+from .services import obtener_datos_factus, obtener_facturas,obtener_factura_por_numero,descargar_pdf_factura,eliminar_factura,obtener_eventos_factura,enviar_evento_aceptacion_tacita
 from django.views.decorators.csrf import csrf_exempt
 import json
 from .services import enviar_factura
@@ -85,3 +85,18 @@ def eventos_factura(request, numero_factura):
     
     data = obtener_eventos_factura(numero_factura)
     return JsonResponse(data, safe=False)
+
+@csrf_exempt
+def aceptar_tacita(request, numero_factura, event_type):
+  # vista para enviar un evento de aceptación tácita
+  
+    if request.method == "POST":
+        try:
+            datos_evento = json.loads(request.body)
+        except json.JSONDecodeError:
+            return JsonResponse({"error": "El cuerpo de la solicitud no es un JSON válido."}, status=400)
+        
+        resultado = enviar_evento_aceptacion_tacita(numero_factura, event_type, datos_evento)
+        return JsonResponse(resultado, safe=False)
+    else:
+        return JsonResponse({"error": "Método no permitido."}, status=405)
