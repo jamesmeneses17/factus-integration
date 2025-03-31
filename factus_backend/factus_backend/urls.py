@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from api.views import (obtener_rangos, obtener_municipios, obtener_tributos, obtener_unidades_medida,crear_factura,FacturaListView,ver_factura,descargar_pdf,eliminar_factura_view
-                       , eventos_factura,aceptar_tacita)
+                       , eventos_factura,aceptar_tacita,crear_nota_credito,ver_notas_credito)
     
 
 urlpatterns = [
@@ -33,4 +33,7 @@ urlpatterns = [
     path('api/factura/eliminar/<str:reference_code>/', eliminar_factura_view, name='eliminar_factura'),
     path('api/factura/eventos/<str:numero_factura>/', eventos_factura, name='eventos_factura'),
     path('api/factura/aceptacion/<str:numero_factura>/<str:event_type>/', aceptar_tacita, name='aceptacion_tacita'),
+    path('api/notas-credito/crear/', crear_nota_credito, name='crear_nota_credito'),  
+    path('api/notas-credito/', ver_notas_credito, name='ver_notas_credito'),
+
 ]

@@ -140,3 +140,59 @@ def enviar_evento_aceptacion_tacita(numero_factura, event_type, datos_evento):
             return {"error": f"Error {response.status_code}: {response.text}"}
     except requests.exceptions.RequestException as e:
         return {"error": f"Error de conexión: {str(e)}"}
+    
+
+
+def crear_validar_nota_credito(access_token, data_nota_credito):
+    "Crear y validar nota credito en Factus"
+    
+    url = "https://api-sandbox.factus.com.co/v1/credit-notes/validate"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}",
+        "Accept": "application/json"
+    }
+    
+    try:
+        response = requests.post(url, json=data_nota_credito, headers=headers)
+        
+        if response.status_code == 201:
+            print("Nota crédito creada y validada exitosamente.")
+            return response.json()
+        elif response.status_code == 409:
+            print("Conflicto: La nota crédito ya existe.")
+            return response.json()
+        elif response.status_code == 422:
+            print("Error de validación en los datos enviados.")
+            return response.json()
+        else:
+            print(f"Error inesperado: {response.status_code}")
+            return response.json()
+    except requests.exceptions.RequestException as e:
+        print(f"Error de conexión: {str(e)}")
+        return {"error": str(e)}
+
+
+def listar_notas_credito(access_token, filtros=None):
+    "Listar todas las notas crédito en Factus"
+    
+    url = "https://api-sandbox.factus.com.co/v1/credit-notes?filter[identification]&filter[names]&filter[number]&filter[prefix]&filter[reference_code]&filter[status]"
+    headers = {
+        "Content-Type": "application/json",
+        "Authorization": f"Bearer {access_token}",
+        "Accept": "application/json"
+    }
+    
+    # Agregar filtros a la URL si existen
+    if filtros:
+        params = "&".join([f"filter[{key}]={value}" for key, value in filtros.items()])
+        url = f"{url}?{params}"
+    
+    try:
+        response = requests.get(url, headers=headers)
+        if response.status_code == 200:
+            return response.json()  # Devuelve las notas crédito
+        else:
+            return {"error": f"Error {response.status_code}: {response.text}"}
+    except requests.exceptions.RequestException as e:
+        return {"error": f"Error de conexión: {str(e)}"}
