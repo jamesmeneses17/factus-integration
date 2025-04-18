@@ -18,6 +18,8 @@ from django.contrib import admin
 from django.urls import path
 from api.views import (obtener_rangos, obtener_municipios, obtener_tributos, obtener_unidades_medida,crear_factura,FacturaListView,ver_factura,descargar_pdf,eliminar_factura_view
                        , eventos_factura,aceptar_tacita,crear_nota_credito,ver_notas_credito)
+from django.views.generic import TemplateView
+
     
 
 urlpatterns = [
@@ -35,5 +37,7 @@ urlpatterns = [
     path('api/factura/aceptacion/<str:numero_factura>/<str:event_type>/', aceptar_tacita, name='aceptacion_tacita'),
     path('api/notas-credito/crear/', crear_nota_credito, name='crear_nota_credito'),  
     path('api/notas-credito/', ver_notas_credito, name='ver_notas_credito'),
+     path('', TemplateView.as_view(template_name="index.html")),
+    path('<path:path>', TemplateView.as_view(template_name="index.html")),  
 
 ]

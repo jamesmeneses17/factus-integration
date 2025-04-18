@@ -1,23 +1,45 @@
 <div class="flex min-h-screen bg-gray-100">
-    <!-- Sidebar -->
-    <aside class="w-64 bg-white shadow-md px-6 py-4">
-      <div class="flex items-center mb-8">
-        <img src="assets/fac.png" alt="Logo Factus" class="h-10 mr-2" />
-       
-      </div>
+  <!-- Sidebar toggle (solo visible en pantallas pequeñas) -->
+  <button
+    class="md:hidden fixed top-4 left-4 z-50 bg-white shadow p-2 rounded"
+    (click)="mostrarSidebar = !mostrarSidebar"
+  >
+    <svg class="w-6 h-6 text-indigo-600" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/>
+    </svg>
+  </button>
+
+  <!-- Sidebar -->
+  <aside
+  class="w-64 bg-white shadow-md px-6 py-4 fixed inset-y-0 left-0 transform md:relative z-40 transition-transform duration-200 ease-in-out"
+  [ngClass]="[
+    mostrarSidebar ? 'translate-x-0' : '-translate-x-full',
+    'md:translate-x-0'
+  ]"
+  >
+    <div class="flex items-center mb-8">
+      <img src="assets/factus.jpeg" alt="Logo Factus" class="h-10 mr-2" />
+    </div>
+
+    <nav class="space-y-4">
+      <a routerLink="/dashboard/crear-factura" class="flex items-center text-gray-700 hover:text-indigo-700">
+        <span class="material-icons mr-2">add_box</span>
+        Crear Facturas
+      </a>
+
+      <a routerLink="/dashboard/ver-facturas" class="flex items-center text-gray-700 hover:text-indigo-700">
+        <span class="material-icons mr-2">visibility</span>
+        Ver Facturas
+      </a>
+    </nav>
+  </aside>
+
+  <!-- Contenido principal -->
+  <main class="flex-1 p-4 flex justify-center">
+    <div class="w-full max-w-5xl">
+      <router-outlet></router-outlet>
+    </div>
+  </main>
   
-      <nav class="space-y-4">
-        <a routerLink="/crear-factura" class="flex items-center text-gray-700 hover:text-indigo-700">
-          <span class="material-icons mr-2">add_box</span>
-          Crear Facturas
-        </a>
-        <a routerLink="/ver-facturas" class="flex items-center text-gray-700 hover:text-indigo-700">
-          <span class="material-icons mr-2">visibility</span>
-          Ver Facturas
-        </a>
-      </nav>
-    </aside>
   
-   
-  </div>
-  
+</div>

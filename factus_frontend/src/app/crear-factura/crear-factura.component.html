@@ -1,0 +1,125 @@
+<div class="flex flex-col items-center justify-center min-h-screen bg-gray-100 py-10 px-4">
+  <div class="bg-white p-6 sm:p-8 rounded shadow-md w-full max-w-4xl mx-auto">
+
+    <!-- Encabezado de los pasos -->
+    <div class="flex justify-between flex-wrap gap-4 mb-8">
+      <div class="flex flex-col items-center">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center"
+          [ngClass]="pasoActual === 1 ? 'bg-indigo-600 text-white' : 'bg-gray-300 text-white'">
+          1
+        </div>
+        <p [ngClass]="pasoActual === 1 ? 'text-indigo-600 font-semibold mt-2' : 'text-gray-600 mt-2'">
+          Datos Generales
+        </p>
+      </div>
+      <div class="flex flex-col items-center">
+        <div class="w-10 h-10 rounded-full flex items-center justify-center"
+          [ngClass]="pasoActual === 2 ? 'bg-indigo-600 text-white' : 'bg-gray-300 text-white'">
+          2
+        </div>
+        <p [ngClass]="pasoActual === 2 ? 'text-indigo-600 font-semibold mt-2' : 'text-gray-600 mt-2'">
+          Información del Cliente
+        </p>
+      </div>
+    </div>
+
+    <!-- Paso 1: Datos Generales -->
+    <div *ngIf="pasoActual === 1" class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div>
+        <label class="block mb-1 font-medium">Rango de Numeración:</label>
+        <select [(ngModel)]="rangoSeleccionado" class="w-full border border-gray-300 rounded px-3 py-2">
+          <option value="" disabled selected>Seleccione un rango</option>
+          <option *ngFor="let r of rangos" [value]="r.id">
+            {{ r.document }} ({{ r.prefix }} desde {{ r.from }} hasta {{ r.to }})
+          </option>
+        </select>
+      </div>
+
+      <div>
+        <label class="block mb-1 font-medium">Método de Pago:</label>
+        <select [(ngModel)]="metodoPago" class="w-full border border-gray-300 rounded px-3 py-2">
+          <option value="" disabled selected>Seleccione un método</option>
+          <option *ngFor="let m of metodosPago" [value]="m">{{ m }}</option>
+        </select>
+      </div>
+
+      <div class="col-span-1 md:col-span-2 flex justify-end mt-8">
+        <button (click)="siguientePaso()"
+          class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">
+          Siguiente
+        </button>
+      </div>
+    </div>
+
+    <!-- Paso 2: Información del Cliente -->
+    <div *ngIf="pasoActual === 2" class="mt-8">
+      <h2 class="text-xl font-bold mb-4 text-center sm:text-left">Información del Cliente</h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div>
+          <label class="block mb-1 font-medium">Tipo de Documento:</label>
+          <select [(ngModel)]="cliente.tipoDocumento" class="w-full border border-gray-300 rounded px-3 py-2">
+            <option value="" disabled selected>Seleccione un tipo</option>
+            <option value="1">Cédula de Ciudadanía</option>
+            <option value="2">NIT</option>
+            <option value="3">Cédula de Extranjería</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Identificación:</label>
+          <input [(ngModel)]="cliente.identificacion" type="text"
+            class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Dígito de Verificación:</label>
+          <input [(ngModel)]="cliente.dv" type="number"
+            class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Nombre / Razón Social:</label>
+          <input [(ngModel)]="cliente.nombre" type="text"
+            class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Dirección:</label>
+          <input [(ngModel)]="cliente.direccion" type="text"
+            class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Correo Electrónico:</label>
+          <input [(ngModel)]="cliente.email" type="email"
+            class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Teléfono:</label>
+          <input [(ngModel)]="cliente.telefono" type="tel"
+            class="w-full border border-gray-300 rounded px-3 py-2" />
+        </div>
+
+        <div>
+          <label class="block mb-1 font-medium">Municipio:</label>
+          <select [(ngModel)]="cliente.municipio"
+            class="w-full border border-gray-300 rounded px-3 py-2 text-gray-800">
+            <option value="" disabled selected class="text-gray-500">Seleccione un municipio</option>
+            <option *ngFor="let m of municipios" [value]="m.id" class="text-black">
+              {{ m.name }} ({{ m.department }})
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="flex flex-col sm:flex-row justify-between gap-4 mt-8">
+        <button (click)="pasoActual = 1"
+          class="bg-gray-300 text-gray-800 px-6 py-2 rounded hover:bg-gray-400 transition">Anterior</button>
+        <button (click)="pasoActual = 3"
+          class="bg-indigo-600 text-white px-6 py-2 rounded hover:bg-indigo-700 transition">Siguiente</button>
+      </div>
+    </div>
+  </div>
+</div>
