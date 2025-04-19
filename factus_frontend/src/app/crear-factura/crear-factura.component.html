@@ -39,8 +39,11 @@
         <label class="block mb-1 font-medium">Método de Pago:</label>
         <select [(ngModel)]="metodoPago" class="w-full border border-gray-300 rounded px-3 py-2">
           <option value="" disabled selected>Seleccione un método</option>
-          <option *ngFor="let m of metodosPago" [value]="m">{{ m }}</option>
+          <option *ngFor="let m of metodosPago" [value]="m.codigo">
+            {{ m.nombre }}
+          </option>
         </select>
+        
       </div>
 
       <div class="col-span-1 md:col-span-2 flex justify-end mt-8">
@@ -58,12 +61,13 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div>
           <label class="block mb-1 font-medium">Tipo de Documento:</label>
-          <select [(ngModel)]="cliente.tipoDocumento" class="w-full border border-gray-300 rounded px-3 py-2">
-            <option value="" disabled selected>Seleccione un tipo</option>
-            <option value="1">Cédula de Ciudadanía</option>
-            <option value="2">NIT</option>
-            <option value="3">Cédula de Extranjería</option>
-          </select>
+<select [(ngModel)]="cliente.tipoDocumento" class="w-full border border-gray-300 rounded px-3 py-2">
+  <option value="" disabled selected>Seleccione un tipo</option>
+  <option *ngFor="let tipo of tiposDocumento" [value]="tipo.id">
+    {{ tipo.nombre }}
+  </option>
+</select>
+
         </div>
 
         <div>
