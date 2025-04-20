@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 from pathlib import Path
 import os
+from corsheaders.defaults import default_headers
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -27,12 +29,13 @@ SECRET_KEY = 'django-insecure-8qs6i=s$&_ldh#gxylz!naklz)n-rsqpp#a2n)$xmo-g41sczj
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -41,21 +44,19 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'api',
-        'corsheaders',
-
 ]
 
 MIDDLEWARE = [
-      'corsheaders.middleware.CorsMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # 👈 PRIMERO
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
+    'django.middleware.common.CommonMiddleware',  # Ya va después
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
 
 ROOT_URLCONF = 'factus_backend.urls'
 
@@ -64,7 +65,7 @@ TEMPLATES = [
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
                 'DIRS': [os.path.join(BASE_DIR, 'dist')],  # Ruta donde está tu index.html generado
 
-        'DIRS': [],
+       
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -131,5 +132,22 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'content-type',
+]
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:4200",
+]
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:4200",
+]
+
+CORS_ALLOW_CREDENTIALS = True
+
+# Si usas cookies para CSRF (opcional si no usas):
+
+# Eliminar esta línea porque genera conflicto:
+# CORS_ALLOW_ALL_ORIGINS = True
+
 
