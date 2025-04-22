@@ -6,7 +6,7 @@ import { Observable } from 'rxjs';
   providedIn: 'root'
 })
 export class TributosService {
-  private url = 'https://api-sandbox.factus.com.co/v1/tributes/products?name=';
+  private url = 'https://api-sandbox.factus.com.co/v1/tributes/products?name='; // <-- este es el correcto
 
   constructor(private http: HttpClient) {}
 
