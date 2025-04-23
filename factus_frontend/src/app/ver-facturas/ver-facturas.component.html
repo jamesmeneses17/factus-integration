@@ -1,1 +1,80 @@
-<p>ver-facturas works!</p>
+<div class="p-4 max-w-7xl mx-auto">
+    <h2 class="text-2xl font-bold mb-6 text-gray-700">Lista de Facturas</h2>
+  
+    <!-- Filtros -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+      <input
+        [(ngModel)]="filtros.identificacion"
+        type="text"
+        placeholder="Número de identificación"
+        class="border px-3 py-2 rounded w-full"
+      />
+      <input
+        [(ngModel)]="filtros.nombres"
+        type="text"
+        placeholder="Nombre de cliente"
+        class="border px-3 py-2 rounded w-full"
+      />
+      <input
+        [(ngModel)]="filtros.numero"
+        type="text"
+        placeholder="Número de factura"
+        class="border px-3 py-2 rounded w-full"
+      />
+    </div>
+  
+    <div class="mb-4 text-right">
+      <button
+        (click)="buscarFacturas()"
+        class="bg-indigo-600 text-white px-4 py-2 rounded hover:bg-indigo-700 transition"
+      >
+        Buscar
+      </button>
+    </div>
+  
+    <!-- Tabla -->
+    <div class="overflow-x-auto bg-white rounded shadow">
+      <table class="min-w-full text-sm text-gray-700">
+        <thead class="bg-indigo-900 text-white text-xs uppercase text-left">
+          <tr>
+            <th class="px-4 py-3">Identificación</th>
+            <th class="px-4 py-3">Nombre</th>
+            <th class="px-4 py-3">Email</th>
+            <th class="px-4 py-3">Número de Factura</th>
+            <th class="px-4 py-3 text-center">Factura Factus</th>
+            <th class="px-4 py-3 text-center">Factura DIAN</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let factura of facturas" class="border-b hover:bg-gray-50">
+            <td class="px-4 py-2">{{ factura.identification }}</td>
+            <td class="px-4 py-2">{{ factura.names }}</td>
+            <td class="px-4 py-2">{{ factura.email }}</td>
+            <td class="px-4 py-2">{{ factura.number }}</td>
+  
+            <!-- PDF Icono -->
+            <td class="px-4 py-2 text-center">
+              <a *ngIf="factura.public_url" [href]="factura.public_url" target="_blank" title="Descargar PDF">
+                <svg class="w-6 h-6 text-indigo-600 hover:text-indigo-800 mx-auto" fill="none" stroke="currentColor"
+                  stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4" />
+                </svg>
+              </a>
+            </td>
+  
+            <!-- Ver en DIAN Icono -->
+            <td class="px-4 py-2 text-center">
+              <a *ngIf="factura.qr" [href]="factura.qr" target="_blank" title="Ver en DIAN">
+                <svg class="w-6 h-6 text-green-600 hover:text-green-800 mx-auto" fill="none" stroke="currentColor"
+                  stroke-width="2" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round"
+                    d="M13 16h-1v-4h-1m1-4h.01M12 20h.01M8 20h.01M4 20h.01M16 20h.01M20 20h.01M20 4H4a2 2 0 00-2 2v14h20V6a2 2 0 00-2-2z" />
+                </svg>
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
