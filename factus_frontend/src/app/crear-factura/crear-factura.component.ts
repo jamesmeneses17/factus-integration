@@ -25,8 +25,6 @@ export class CrearFacturaComponent implements OnInit {
     { codigo: 10, nombre: 'Efectivo' },
     { codigo: 42, nombre: 'Consignación' },
     { codigo: 20, nombre: 'Cheque'},
-   
-    // ... otros métodos de pago
   ];
 
   tiposDocumento = [
@@ -40,6 +38,14 @@ export class CrearFacturaComponent implements OnInit {
     { id: 21, nombre: 'No aplica' },
   ];
 
+  tiposOrganizacion = [
+    { id: 1, nombre: 'Persona jurídica' },
+    { id: 2, nombre: 'Persona natural' },
+  ];
+
+  referenciaFactura: string = '';
+  observacionFactura: string = '';
+
   cliente: any = {
     tipoDocumento: '',
     identificacion: '',
@@ -50,6 +56,7 @@ export class CrearFacturaComponent implements OnInit {
     telefono: '',
     municipio: '',
     tributo: '',
+    organizacion: ''
   };
 
   producto: any = {
@@ -108,8 +115,8 @@ export class CrearFacturaComponent implements OnInit {
     const datosFactura = {
       numbering_range_id: Number(this.rangoSeleccionado),
       document: '01',
-      reference_code: this.producto.codigo,
-      observation: 'Venta generada desde el sistema Cootep',
+      reference_code: this.referenciaFactura,
+      observation: this.observacionFactura,
       payment_method_code: Number(this.metodoPago),
       customer: {
         identification: this.cliente.identificacion,
@@ -120,9 +127,8 @@ export class CrearFacturaComponent implements OnInit {
         address: this.cliente.direccion,
         email: this.cliente.email,
         phone: this.cliente.telefono,
-        legal_organization_id: 2,
-        tribute_id: 21,
-
+        legal_organization_id: Number(this.cliente.organizacion),
+        tribute_id: Number(this.cliente.tributo),
         identification_document_id: Number(this.cliente.tipoDocumento),
         municipality_id: Number(this.cliente.municipio),
       },
@@ -138,8 +144,7 @@ export class CrearFacturaComponent implements OnInit {
           unit_measure_id: Number(this.producto.unidadMedida),
           standard_code_id: 1,
           is_excluded: 0,
-          tribute_id: Number(this.producto.tributo), // ✔️ Aquí va el tributo del producto (1, 4, etc.)
-
+          tribute_id: Number(this.producto.tributo),
           withholding_taxes: [],
         },
       ],
