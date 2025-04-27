@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Observable, from } from 'rxjs';
+import { Observable } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 import { AuthService } from './auth.service';
 
@@ -40,19 +40,58 @@ export class FacturasService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         });
-  
+
         return this.http.get(`${this.apiUrl}/download-pdf/${numeroFactura}`, { headers });
       })
     );
   }
+
+  descargarXML(numeroFactura: string): Observable<any> {
+    return this.authService.obtenerToken().pipe(
+      switchMap((res: any) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${res.access_token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+
+        return this.http.get(`${this.apiUrl}/download-xml/${numeroFactura}`, { headers });
+      })
+    );
+  }
+
   enviarFactura(datosFactura: any, token: string): Observable<any> {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
       Accept: 'application/json',
     });
-  
+
     return this.http.post(this.apiUrl, datosFactura, { headers });
+  }
+  obtenerFacturaPorNumero(numeroFactura: string): Observable<any> {
+    return this.authService.obtenerToken().pipe(
+      switchMap((res: any) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${res.access_token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+  
+        return this.http.get(`${this.apiUrl}/${numeroFactura}`, { headers });
+      })
+    );
+  }
+  obtenerQRFactura(numeroFactura: string): Observable<any> {
+    return this.authService.obtenerToken().pipe(
+      switchMap((res: any) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${res.access_token}`,
+          'Content-Type': 'application/json',
+        });
+        return this.http.get(`${this.apiUrl}/show/${numeroFactura}`, { headers });
+      })
+    );
   }
   
   

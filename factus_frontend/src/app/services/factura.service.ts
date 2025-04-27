@@ -45,4 +45,18 @@ export class FacturasService {
       })
     );
   }
+
+  descargarXML(numeroFactura: string): Observable<any> {
+    return this.authService.obtenerToken().pipe( // <-- return aquí es importante
+      switchMap((res: any) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${res.access_token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+        return this.http.get(`${this.apiUrl}/download-xml/${numeroFactura}`, { headers }); // <-- este return también
+      })
+    );
+  }
+  
 }
