@@ -31,4 +31,29 @@ export class FacturasService {
       })
     );
   }
+
+  descargarFactura(numeroFactura: string): Observable<any> {
+    return this.authService.obtenerToken().pipe(
+      switchMap((res: any) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${res.access_token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+  
+        return this.http.get(`${this.apiUrl}/download-pdf/${numeroFactura}`, { headers });
+      })
+    );
+  }
+  enviarFactura(datosFactura: any, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    });
+  
+    return this.http.post(this.apiUrl, datosFactura, { headers });
+  }
+  
+  
 }

@@ -5,7 +5,7 @@ import { RangosService } from '../services/rangos.service';
 import { MunicipiosService } from '../services/municipios.service';
 import { UnidadesService } from '../services/unidades.service';
 import { TributosService } from '../services/tributos.service';
-import { FacturaService } from '../services/factura.service';
+import { FacturasService } from '../services/facturas.service';
 import { AuthService } from '../services/auth.service';
 
 @Component({
@@ -79,7 +79,7 @@ export class CrearFacturaComponent implements OnInit {
     private municipiosService: MunicipiosService,
     private unidadesService: UnidadesService,
     private tributosService: TributosService,
-    private facturaService: FacturaService
+    private facturaService: FacturasService
   ) {}
 
   ngOnInit(): void {
@@ -156,13 +156,14 @@ export class CrearFacturaComponent implements OnInit {
       next: (res) => {
         const token = res.access_token;
         this.facturaService.enviarFactura(datosFactura, token).subscribe({
-          next: (resp) => {
-            console.log('✅ Factura generada:', resp);
+          next: (res: any) => {
+            console.log('✅ Factura generada:', res);
             alert('Factura generada correctamente');
-            const pdfUrl = resp?.data?.pdf_url;
+            const pdfUrl = res?.data?.pdf_url;
             if (pdfUrl) window.open(pdfUrl, '_blank');
           },
-          error: (err) => {
+          
+          error: (err: any) => {
             console.error('❌ Error al generar factura:', err);
             if (err?.error?.errors) {
               const detalles = Object.entries(err.error.errors)
