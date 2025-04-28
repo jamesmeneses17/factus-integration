@@ -47,16 +47,54 @@ export class FacturasService {
   }
 
   descargarXML(numeroFactura: string): Observable<any> {
-    return this.authService.obtenerToken().pipe( // <-- return aquí es importante
+    return this.authService.obtenerToken().pipe(
       switchMap((res: any) => {
         const headers = new HttpHeaders({
           Authorization: `Bearer ${res.access_token}`,
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         });
-        return this.http.get(`${this.apiUrl}/download-xml/${numeroFactura}`, { headers }); // <-- este return también
+
+        return this.http.get(`${this.apiUrl}/download-xml/${numeroFactura}`, { headers });
       })
     );
   }
-  
+
+  enviarFactura(datosFactura: any, token: string): Observable<any> {
+    const headers = new HttpHeaders({
+      Authorization: `Bearer ${token}`,
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+    });
+
+    console.log('🔵 Intentando enviar factura con datos:', datosFactura);
+
+    return this.http.post(this.apiUrl, datosFactura, { headers });
+  }
+
+  obtenerFacturaPorNumero(numeroFactura: string): Observable<any> {
+    return this.authService.obtenerToken().pipe(
+      switchMap((res: any) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${res.access_token}`,
+          'Content-Type': 'application/json',
+          'Accept': 'application/json',
+        });
+
+        return this.http.get(`${this.apiUrl}/${numeroFactura}`, { headers });
+      })
+    );
+  }
+
+  obtenerQRFactura(numeroFactura: string): Observable<any> {
+    return this.authService.obtenerToken().pipe(
+      switchMap((res: any) => {
+        const headers = new HttpHeaders({
+          Authorization: `Bearer ${res.access_token}`,
+          'Content-Type': 'application/json',
+        });
+        return this.http.get(`${this.apiUrl}/show/${numeroFactura}`, { headers });
+      })
+    );
+  }
 }

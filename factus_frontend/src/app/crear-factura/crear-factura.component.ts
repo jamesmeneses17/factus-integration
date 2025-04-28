@@ -17,34 +17,35 @@ import { AuthService } from '../services/auth.service';
 export class CrearFacturaComponent implements OnInit {
   pasoActual: number = 1;
 
-  rangos: any[] = [];
-  rangoSeleccionado: string = '';
+  referenciaFactura: string = ''; // <-- Vacío para que el usuario lo escriba
+  observacionFactura: string = '';
 
-  metodoPago: string = '';
+  tiposOrganizacion = [
+    { id: 1, nombre: 'Persona jurídica' },
+    { id: 2, nombre: 'Persona natural' }
+  ];
+
+  tributosCliente = [
+    { id: 18, nombre: 'IVA' },
+    { id: 21, nombre: 'No aplica' }
+  ];
+
+  rangos: any[] = [];
+  rangoSeleccionado: string = ''; // <-- El usuario debe escoger el rango en el formulario
+
+  metodoPago: string = ''; // <-- El usuario debe escoger el método de pago
+
   metodosPago = [
     { codigo: 10, nombre: 'Efectivo' },
     { codigo: 42, nombre: 'Consignación' },
-    { codigo: 20, nombre: 'Cheque'},
+    { codigo: 20, nombre: 'Cheque' },
   ];
 
   tiposDocumento = [
     { id: 1, nombre: 'Registro civil' },
     { id: 3, nombre: 'Cédula de ciudadanía' },
-    { id: 6, nombre: 'NIT' },
+    { id: 6, nombre: 'NIT' }
   ];
-
-  tributosCliente = [
-    { id: 18, nombre: 'IVA' },
-    { id: 21, nombre: 'No aplica' },
-  ];
-
-  tiposOrganizacion = [
-    { id: 1, nombre: 'Persona jurídica' },
-    { id: 2, nombre: 'Persona natural' },
-  ];
-
-  referenciaFactura: string = '';
-  observacionFactura: string = '';
 
   cliente: any = {
     tipoDocumento: '',
@@ -58,15 +59,15 @@ export class CrearFacturaComponent implements OnInit {
     tributo: '',
     organizacion: ''
   };
-
+  
   producto: any = {
     codigo: '',
     nombre: '',
     cantidad: 1,
-    precio: 0,
+    precio: '',
     tasa: '',
     unidadMedida: '',
-    tributo: '',
+    tributo: ''
   };
 
   municipios: any[] = [];
@@ -130,7 +131,7 @@ export class CrearFacturaComponent implements OnInit {
         legal_organization_id: Number(this.cliente.organizacion),
         tribute_id: Number(this.cliente.tributo),
         identification_document_id: Number(this.cliente.tipoDocumento),
-        municipality_id: Number(this.cliente.municipio),
+        municipality_id: Number(this.cliente.municipio)
       },
       items: [
         {
@@ -140,49 +141,35 @@ export class CrearFacturaComponent implements OnInit {
           discount: 0,
           discount_rate: 0,
           price: Number(this.producto.precio),
-          tax_rate: this.producto.tasa,
+          tax_rate: Number(this.producto.tasa),
           unit_measure_id: Number(this.producto.unidadMedida),
           standard_code_id: 1,
           is_excluded: 0,
           tribute_id: Number(this.producto.tributo),
-          withholding_taxes: [],
-        },
-      ],
+          withholding_taxes: []
+        }
+      ]
     };
 
-    console.log('📦 JSON final:', JSON.stringify(datosFactura, null, 2));
+    console.log('📦 JSON que se enviará a Factus:', JSON.stringify(datosFactura, null, 2));
 
     this.authService.obtenerToken().subscribe({
       next: (res) => {
         const token = res.access_token;
         this.facturaService.enviarFactura(datosFactura, token).subscribe({
-          next: (res: any) => {
-            console.log('✅ Factura generada:', res);
+          next: (resp) => {
+            console.log('✅ Factura generada correctamente:', resp);
             alert('Factura generada correctamente');
-            const pdfUrl = res?.data?.pdf_url;
+            const pdfUrl = resp?.data?.pdf_url;
             if (pdfUrl) window.open(pdfUrl, '_blank');
           },
-          
-          error: (err: any) => {
+          error: (err) => {
             console.error('❌ Error al generar factura:', err);
-            if (err?.error?.errors) {
-              const detalles = Object.entries(err.error.errors)
-                .map(
-                  ([campo, mensajes]: any) => `${campo}: ${mensajes.join(', ')}`
-                )
-                .join('\n');
-              alert('Errores de validación:\n' + detalles);
-            } else if (err?.error?.message) {
-              alert('Error: ' + err.error.message);
-            } else if (typeof err.error === 'string') {
-              alert('Error: ' + err.error);
-            } else {
-              alert('Error de validación');
-            }
-          },
+            alert('Error al generar factura. Ver consola.');
+          }
         });
       },
-      error: (err) => console.error('Error al obtener token:', err),
+      error: (err) => console.error('❌ Error al obtener token:', err)
     });
   }
 
@@ -192,3 +179,4 @@ export class CrearFacturaComponent implements OnInit {
     }
   }
 }
+

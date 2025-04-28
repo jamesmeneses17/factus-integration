@@ -8,7 +8,8 @@ import { AuthService } from './auth.service';
   providedIn: 'root',
 })
 export class FacturasService {
-  private apiUrl = 'https://api-sandbox.factus.com.co/v1/bills';
+  private apiUrlListar = 'https://api-sandbox.factus.com.co/v1/bills'; // Para listar, descargar, buscar
+  private apiUrlCrear = 'https://api-sandbox.factus.com.co/v1/bills/validate'; // Para crear facturas
 
   constructor(
     private http: HttpClient,
@@ -27,7 +28,7 @@ export class FacturasService {
           params: new HttpParams({ fromObject: filtros }),
         };
 
-        return this.http.get(this.apiUrl, options);
+        return this.http.get(this.apiUrlListar, options);
       })
     );
   }
@@ -41,7 +42,7 @@ export class FacturasService {
           'Accept': 'application/json',
         });
 
-        return this.http.get(`${this.apiUrl}/download-pdf/${numeroFactura}`, { headers });
+        return this.http.get(`${this.apiUrlListar}/download-pdf/${numeroFactura}`, { headers });
       })
     );
   }
@@ -55,7 +56,7 @@ export class FacturasService {
           'Accept': 'application/json',
         });
 
-        return this.http.get(`${this.apiUrl}/download-xml/${numeroFactura}`, { headers });
+        return this.http.get(`${this.apiUrlListar}/download-xml/${numeroFactura}`, { headers });
       })
     );
   }
@@ -64,11 +65,14 @@ export class FacturasService {
     const headers = new HttpHeaders({
       Authorization: `Bearer ${token}`,
       'Content-Type': 'application/json',
-      Accept: 'application/json',
+      'Accept': 'application/json',
     });
 
-    return this.http.post(this.apiUrl, datosFactura, { headers });
+    console.log('🔵 Intentando enviar factura con datos:', datosFactura);
+
+    return this.http.post(this.apiUrlCrear, datosFactura, { headers });
   }
+
   obtenerFacturaPorNumero(numeroFactura: string): Observable<any> {
     return this.authService.obtenerToken().pipe(
       switchMap((res: any) => {
@@ -77,11 +81,12 @@ export class FacturasService {
           'Content-Type': 'application/json',
           'Accept': 'application/json',
         });
-  
-        return this.http.get(`${this.apiUrl}/${numeroFactura}`, { headers });
+
+        return this.http.get(`${this.apiUrlListar}/${numeroFactura}`, { headers });
       })
     );
   }
+
   obtenerQRFactura(numeroFactura: string): Observable<any> {
     return this.authService.obtenerToken().pipe(
       switchMap((res: any) => {
@@ -89,10 +94,8 @@ export class FacturasService {
           Authorization: `Bearer ${res.access_token}`,
           'Content-Type': 'application/json',
         });
-        return this.http.get(`${this.apiUrl}/show/${numeroFactura}`, { headers });
+        return this.http.get(`${this.apiUrlListar}/show/${numeroFactura}`, { headers });
       })
     );
   }
-  
-  
 }
