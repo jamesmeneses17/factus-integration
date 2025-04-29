@@ -1,5 +1,5 @@
 [build]
-  command = "npm install -g @angular/cli && npm install && ng build --configuration production"
+  command = "npm install && npx ng build --configuration production"
   publish = "dist/factus_frontend"
 
 [context.production.environment]
