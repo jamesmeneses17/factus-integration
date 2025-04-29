@@ -7,6 +7,7 @@ import { UnidadesService } from '../services/unidades.service';
 import { TributosService } from '../services/tributos.service';
 import { FacturasService } from '../services/facturas.service';
 import { AuthService } from '../services/auth.service';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-crear-factura',
@@ -22,12 +23,12 @@ export class CrearFacturaComponent implements OnInit {
 
   tiposOrganizacion = [
     { id: 1, nombre: 'Persona jurídica' },
-    { id: 2, nombre: 'Persona natural' }
+    { id: 2, nombre: 'Persona natural' },
   ];
 
   tributosCliente = [
     { id: 18, nombre: 'IVA' },
-    { id: 21, nombre: 'No aplica' }
+    { id: 21, nombre: 'No aplica' },
   ];
 
   rangos: any[] = [];
@@ -44,7 +45,7 @@ export class CrearFacturaComponent implements OnInit {
   tiposDocumento = [
     { id: 1, nombre: 'Registro civil' },
     { id: 3, nombre: 'Cédula de ciudadanía' },
-    { id: 6, nombre: 'NIT' }
+    { id: 6, nombre: 'NIT' },
   ];
 
   cliente: any = {
@@ -57,9 +58,9 @@ export class CrearFacturaComponent implements OnInit {
     telefono: '',
     municipio: '',
     tributo: '',
-    organizacion: ''
+    organizacion: '',
   };
-  
+
   producto: any = {
     codigo: '',
     nombre: '',
@@ -67,7 +68,7 @@ export class CrearFacturaComponent implements OnInit {
     precio: '',
     tasa: '',
     unidadMedida: '',
-    tributo: ''
+    tributo: '',
   };
 
   municipios: any[] = [];
@@ -131,7 +132,7 @@ export class CrearFacturaComponent implements OnInit {
         legal_organization_id: Number(this.cliente.organizacion),
         tribute_id: Number(this.cliente.tributo),
         identification_document_id: Number(this.cliente.tipoDocumento),
-        municipality_id: Number(this.cliente.municipio)
+        municipality_id: Number(this.cliente.municipio),
       },
       items: [
         {
@@ -146,30 +147,49 @@ export class CrearFacturaComponent implements OnInit {
           standard_code_id: 1,
           is_excluded: 0,
           tribute_id: Number(this.producto.tributo),
-          withholding_taxes: []
-        }
-      ]
+          withholding_taxes: [],
+        },
+      ],
     };
 
-    console.log('📦 JSON que se enviará a Factus:', JSON.stringify(datosFactura, null, 2));
+    console.log(
+      '📦 JSON que se enviará a Factus:',
+      JSON.stringify(datosFactura, null, 2)
+    );
 
     this.authService.obtenerToken().subscribe({
       next: (res) => {
         const token = res.access_token;
         this.facturaService.enviarFactura(datosFactura, token).subscribe({
           next: (resp) => {
-            console.log('✅ Factura generada correctamente:', resp);
-            alert('Factura generada correctamente');
+            console.log('✅ Respuesta Factura generada:', resp);
+        
+            Swal.fire({
+              icon: 'success',
+              title: 'Factura generada',
+              text: 'La factura fue creada exitosamente.',
+              confirmButtonColor: '#3085d6',
+              confirmButtonText: 'Aceptar'
+            });
+        
             const pdfUrl = resp?.data?.pdf_url;
             if (pdfUrl) window.open(pdfUrl, '_blank');
           },
           error: (err) => {
-            console.error('❌ Error al generar factura:', err);
-            alert('Error al generar factura. Ver consola.');
+            console.error('❌ Error HTTP al enviar factura:', err);
+        
+            Swal.fire({
+              icon: 'error',
+              title: 'Error al generar la factura',
+              text: 'Ocurrió un problema al intentar crear la factura. Por favor, revisa los datos.',
+              confirmButtonColor: '#d33',
+              confirmButtonText: 'Aceptar'
+            });
           }
         });
+        
       },
-      error: (err) => console.error('❌ Error al obtener token:', err)
+      error: (err) => console.error('❌ Error al obtener token:', err),
     });
   }
 
@@ -179,4 +199,3 @@ export class CrearFacturaComponent implements OnInit {
     }
   }
 }
-

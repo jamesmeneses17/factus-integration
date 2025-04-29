@@ -99,7 +99,29 @@
             </button>
           </td>
         </tr>
+        
       </tbody>
     </table>
+    <!-- Paginador manual -->
+<div class="flex justify-center mt-4 items-center space-x-2">
+  <button
+    (click)="paginaAnterior()"
+    [disabled]="paginaActual === 1"
+    class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition disabled:opacity-50"
+  >
+    Anterior
+  </button>
+
+  <span class="text-gray-700 font-semibold">Página {{ paginaActual }} de {{ totalPaginas }}</span>
+
+  <button
+    (click)="paginaSiguiente()"
+    [disabled]="paginaActual === totalPaginas"
+    class="px-4 py-2 bg-indigo-600 text-white rounded hover:bg-indigo-700 transition disabled:opacity-50"
+  >
+    Siguiente
+  </button>
+</div>
+
   </div>
 </div>

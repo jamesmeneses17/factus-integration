@@ -8,9 +8,6 @@ import { PDFDocumentProxy } from 'pdfjs-dist/types/src/display/api';
 
 GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.worker.min.js`;
 
-
-
-
 @Component({
   selector: 'app-ver-facturas',
   standalone: true,
@@ -19,11 +16,15 @@ GlobalWorkerOptions.workerSrc = `https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2
 })
 export class VerFacturasComponent implements OnInit {
   facturas: any[] = [];
+  facturasPagina: any[] = [];
   filtros = {
     numero: '',
     identificacion: '',
-    nombres: ''
+    nombres: '',
   };
+
+  paginaActual = 1;
+  filasPorPagina = 5;
 
   constructor(private facturasService: FacturasService) {}
 
@@ -42,45 +43,67 @@ export class VerFacturasComponent implements OnInit {
       next: (resp: any) => {
         console.log(resp);
         this.facturas = Array.isArray(resp?.data?.data) ? resp.data.data : [];
+        this.actualizarFacturasPagina();
       },
-      error: (err: any) => console.error('Error al cargar facturas:', err)
+      error: (err: any) => console.error('Error al cargar facturas:', err),
     });
+  }
+
+  actualizarFacturasPagina() {
+    const inicio = (this.paginaActual - 1) * this.filasPorPagina;
+    const fin = inicio + this.filasPorPagina;
+    this.facturasPagina = this.facturas.slice(inicio, fin);
+  }
+
+  paginaAnterior() {
+    if (this.paginaActual > 1) {
+      this.paginaActual--;
+      this.actualizarFacturasPagina();
+    }
+  }
+
+  paginaSiguiente() {
+    if (this.paginaActual < this.totalPaginas) {
+      this.paginaActual++;
+      this.actualizarFacturasPagina();
+    }
+  }
+
+  get totalPaginas() {
+    return Math.ceil(this.facturas.length / this.filasPorPagina);
   }
 
   descargarPDF(factura: any) {
     this.facturasService.descargarFactura(factura.number).subscribe({
       next: (resp: any) => {
-        console.log('🧩 Respuesta completa de la API:', resp);
-  
         const base64 = resp.data?.pdf_base_64_encoded;
         const nombreArchivo = `${resp.data?.file_name || 'factura'}.pdf`;
-  
+
         if (!base64) {
           alert('No se encontró el PDF para esta factura');
           return;
         }
-  
+
         const decoded = atob(base64);
-  
+
         if (!decoded.startsWith('%PDF-')) {
           alert('El archivo recibido no es un PDF válido');
           return;
         }
-  
+
         const byteNumbers = Array.from(decoded, (char) => char.charCodeAt(0));
         const byteArray = new Uint8Array(byteNumbers);
         const blob = new Blob([byteArray], { type: 'application/pdf' });
-  
+
         saveAs(blob, nombreArchivo);
       },
       error: (err: any) => {
         console.error('❌ Error descargando PDF:', err);
         alert('Error al descargar el PDF');
-      }
+      },
     });
   }
-  
-  
+
   generarLinkDIAN(factura: any) {
     this.facturasService.obtenerQRFactura(factura.number).subscribe({
       next: (resp: any) => {
@@ -94,13 +117,7 @@ export class VerFacturasComponent implements OnInit {
       error: (err: any) => {
         console.error('❌ Error obteniendo el QR:', err);
         alert('Error al obtener el QR de la factura');
-      }
+      },
     });
   }
-  
-  
-  
-  
-  
-  
 }
